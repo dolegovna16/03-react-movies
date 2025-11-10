@@ -1,56 +1,52 @@
-import toast from "react-hot-toast";
-import styles from "./SearchBar.module.css";
+import styles from './SearchBar.module.css';
+import { Toaster, toast } from 'react-hot-toast';
 
 interface SearchBarProps {
   onSubmit: (query: string) => void;
 }
 
 export default function SearchBar({ onSubmit }: SearchBarProps) {
-  const handleSearch = (formData: FormData) => {
-    const query = formData.get("query") as string;
-    if (query.trim() === "") {
-      toast.error("Please enter your search query.");
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+    const query = (formData.get('query') as string).trim();
+
+    if (query === '') {
+      toast.error('Please enter your search query.');
       return;
     }
+
     onSubmit(query);
   };
 
   return (
-    <>
-        <header className={styles.header}>
-    <div className={styles.container}>
-      <a
-        className={styles.link}
-        href="https://www.themoviedb.org/"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Powered by TMDB
-      </a>
+    <header className={styles.header}>
+      <Toaster />
+      <div className={styles.container}>
+        <a
+          className={styles.link}
+          href="https://www.themoviedb.org/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Powered by TMDB
+        </a>
 
-      <form
-        className={styles.form}
-        onSubmit={(e) => {
-          e.preventDefault();
-          const fd = new FormData(e.currentTarget);
-          handleSearch(fd);
-        }}
-      >
-        <input
-          className={styles.input}
-          type="text"
-          name="query"
-          autoComplete="off"
-          placeholder="Search movies..."
-          autoFocus
-        />
-        <button className={styles.button} type="submit">
-          Search
-        </button>
-      </form>
-    </div>
-  </header>
-      ;
-    </>
+        <form action="#" className={styles.form} onSubmit={handleSubmit}>
+          <input
+            className={styles.input}
+            type="text"
+            name="query"
+            autoComplete="off"
+            placeholder="Search movies..."
+            autoFocus
+          />
+          <button className={styles.button} type="submit">
+            Search
+          </button>
+        </form>
+      </div>
+    </header>
   );
 }
